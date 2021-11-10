@@ -27,13 +27,13 @@ client.connect(err => {
         console.log(result);
         res.send(result.insertedCount > 0)
       })
-  })
+  });
 
-  app.get('/allService', (req, res) => {
-    serviceCollection.find({})
-      .toArray((err, documents) => {
-        res.send(documents);
-      })
+  //  make route and get data
+  app.get("/allService", (req, res) => {
+    serviceCollection.find({}).toArray((err, results) => {
+      res.send(results);
+    })
   })
 
   app.get('/service/:id', (req, res) => {
@@ -41,21 +41,21 @@ client.connect(err => {
       .toArray((err, documents) => {
         res.send(documents[0]);
       })
-  })
+  });
 
   app.post('/addOrder', (req, res) => {
     orderCollection.insertOne(req.body)
       .then(result => {
         res.send(result.insertedCount > 0)
       })
-  })
+  });
 
   app.get('/allOrder', (req, res) => {
     orderCollection.find({})
       .toArray((err, documents) => {
         res.send(documents);
       })
-  })
+  });
 
   app.get('/orders', (req, res) => {
     const queryEmail = req.query.email;
@@ -63,7 +63,7 @@ client.connect(err => {
       .toArray((err, documents) => {
         res.send(documents);
       })
-  })
+  });
 
   app.patch('/update/:id', (req, res) => {
     orderCollection.updateOne({ _id: req.params.id }, {
@@ -72,28 +72,28 @@ client.connect(err => {
       .then(result => {
         res.send(result.modifiedCount > 0)
       })
-  })
+  });
 
   app.post('/addReview', (req, res) => {
     testimonialCollection.insertOne(req.body)
       .then(result => {
         res.send(result.insertedCount > 0)
       })
-  })
+  });
 
   app.get('/allReview', (req, res) => {
     testimonialCollection.find({})
       .toArray((err, documents) => {
         res.send(documents);
       })
-  })
+  });
 
   app.post('/addAdmin', (req, res) => {
     adminCollection.insertOne(req.body)
       .then(result => {
         res.send(result.insertedCount > 0)
       })
-  })
+  });
 
   app.get('/admin', (req, res) => {
     const queryEmail = req.query.email;
@@ -101,14 +101,14 @@ client.connect(err => {
       .toArray((err, documents) => {
         res.send(documents.length > 0);
       })
-  })
+  });
 
   app.delete('/delete/:id', (req, res) => {
     serviceCollection.deleteOne({ _id: ObjectID(req.params.id) })
       .then(result => {
         res.send(result.deletedCount > 0)
       })
-  })
+  });
 
 });
 
