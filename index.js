@@ -7,6 +7,8 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express()
 const port = process.env.PORT || 5000;
 
+/* const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cnelf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`; */
+
 const uri = `mongodb+srv://watchshop:hbOVLjusrAgEtZ62@cluster0.cnelf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 
@@ -70,13 +72,6 @@ client.connect(err => {
       })
   });
 
-  // delete order
-  /*   app.delete("/delteOrder/:id", async (req, res) => {
-      const result = await orderCollection.deleteOne({
-        _id: ObjectId(req.params.id),
-      });
-      res.send(result);
-    }); */
 
   // delete orders data 
   app.delete('/delteOrder/:id', (req, res) => {
@@ -88,15 +83,16 @@ client.connect(err => {
   });
 
 
-  // uptade status
+  // uptade status stutes
   app.patch('/update/:id', (req, res) => {
-    orderCollection.updateOne({ _id: req.params.id }, {
+    console.log(req.body);
+    orderCollection.updateOne({ _id: ObjectID(req.params.id) }, {
       $set: { status: req.body.status }
     })
       .then(result => {
         res.send(result.modifiedCount > 0)
       })
-  });
+  })
 
   // add review
   app.post('/addReview', (req, res) => {
