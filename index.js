@@ -7,7 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express()
 const port = process.env.PORT || 5000;
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cnelf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://watchshop:hbOVLjusrAgEtZ62@cluster0.cnelf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 
 
@@ -21,6 +21,7 @@ client.connect(err => {
   const testimonialCollection = client.db("watch-shop").collection("testimonials");
   const adminCollection = client.db("watch-shop").collection("admins");
 
+  /// add nwe service
   app.post('/addService', (req, res) => {
     serviceCollection.insertOne(req.body)
       .then(result => {
@@ -36,6 +37,7 @@ client.connect(err => {
     })
   })
 
+  //  make route and get data
   app.get('/service/:id', (req, res) => {
     serviceCollection.find({ _id: ObjectID(req.params.id) })
       .toArray((err, documents) => {
@@ -43,6 +45,7 @@ client.connect(err => {
       })
   });
 
+  // add addorder option
   app.post('/addOrder', (req, res) => {
     orderCollection.insertOne(req.body)
       .then(result => {
@@ -50,6 +53,7 @@ client.connect(err => {
       })
   });
 
+  // get all orders data
   app.get('/allOrder', (req, res) => {
     orderCollection.find({})
       .toArray((err, documents) => {
@@ -57,6 +61,7 @@ client.connect(err => {
       })
   });
 
+  // get query data by email and id 
   app.get('/orders', (req, res) => {
     const queryEmail = req.query.email;
     orderCollection.find({ email: queryEmail })
@@ -65,6 +70,25 @@ client.connect(err => {
       })
   });
 
+  // delete order
+  /*   app.delete("/delteOrder/:id", async (req, res) => {
+      const result = await orderCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.send(result);
+    }); */
+
+  // delete orders data 
+  app.delete('/delteOrder/:id', (req, res) => {
+    orderCollection.deleteOne({ _id: ObjectID(req.params.id) })
+      .then(result => {
+        console.log('hello', result);
+        res.send(result)
+      })
+  });
+
+
+  // uptade status
   app.patch('/update/:id', (req, res) => {
     orderCollection.updateOne({ _id: req.params.id }, {
       $set: { status: req.body.status }
@@ -74,6 +98,7 @@ client.connect(err => {
       })
   });
 
+  // add review
   app.post('/addReview', (req, res) => {
     testimonialCollection.insertOne(req.body)
       .then(result => {
@@ -81,6 +106,7 @@ client.connect(err => {
       })
   });
 
+  // get all reviews
   app.get('/allReview', (req, res) => {
     testimonialCollection.find({})
       .toArray((err, documents) => {
@@ -88,6 +114,7 @@ client.connect(err => {
       })
   });
 
+  // make admin
   app.post('/addAdmin', (req, res) => {
     adminCollection.insertOne(req.body)
       .then(result => {
@@ -95,6 +122,7 @@ client.connect(err => {
       })
   });
 
+  // get admins
   app.get('/admin', (req, res) => {
     const queryEmail = req.query.email;
     adminCollection.find({ email: queryEmail })
@@ -103,10 +131,12 @@ client.connect(err => {
       })
   });
 
+  // delete collection data 
   app.delete('/delete/:id', (req, res) => {
     serviceCollection.deleteOne({ _id: ObjectID(req.params.id) })
       .then(result => {
-        res.send(result.deletedCount > 0)
+        console.log(result);
+        res.send(result)
       })
   });
 
